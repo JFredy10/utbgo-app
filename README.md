@@ -1,4 +1,4 @@
-## 🚀 Arquitectura
+## Arquitectura
 El proyecto consiste en 4 componentes principales:
 1. **Frontend (Flutter):** Aplicación móvil multiplataforma.
 2. **Backend (Go + Gin):** API RESTful principal para manejar usuarios, contenido, y autenticación OIDC.
@@ -12,7 +12,7 @@ El proyecto consiste en 4 componentes principales:
 - **Caché & Colas:** Redis (Upstash Cloud)
 - **Almacenamiento:** Cloudinary
 
-## 📦 Estructura del Código
+## Estructura del Código
 
 ```
 📁 api-service/            # API Principal en Go
@@ -21,7 +21,7 @@ El proyecto consiste en 4 componentes principales:
 📁 lib/                    # Frontend Flutter
 ```
 
-## 🚀 Guía de Inicio Rápido
+## Guía de Inicio Rápido
 
 Para poner en marcha todo el ecosistema de UTBGO en unos minutos, sigue estos pasos:
 
@@ -47,7 +47,7 @@ flutter run
 
 ---
 
-## 🏗️ Arquitectura del Sistema
+## Arquitectura del Sistema
 El sistema está diseñado bajo una arquitectura de microservicios moderna:
 - **API Principal (Go):** Orquestador de peticiones, autenticación y lógica de negocio.
 - **Tracking Service (Python):** Ingesta masiva de eventos (vistas, likes).
