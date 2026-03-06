@@ -5,7 +5,7 @@ El proyecto consiste en 4 componentes principales:
 3. **Tracking Service (Python/FastAPI):** Microservicio para capturar métricas de uso y engagement en tiempo real.
 4. **Recommendation Service (Python/FastAPI):** Motor de recomendación híbrido que usa IA (LightGBM) y caché dinámica.
 
-## 🛠️ Tecnologías
+## Tecnologías
 - **App:** Flutter, Dart, Firebase Auth
 - **Backend APIs:** Golang (Main), Python (Microservicios)
 - **Base de Datos:** PostgreSQL (Neon)
