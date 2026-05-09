@@ -39,25 +39,25 @@ jobs:
           az account set --subscription "$AZ_SUBSCRIPTION"
 
       - name: 🐳 Login to Azure Container Registry
-        run: az acr login --name ${{ secrets.ACR_NAME }}
+        run: az acr login --name utbgoregistryt4kj
 
       - name: 🔨 Build and Push Images
         run: |
           # API Go
-          docker build -f ./Dockerfile -t ${{ secrets.ACR_NAME }}.azurecr.io/utbgo-api:${{ github.sha }} .
-          docker push ${{ secrets.ACR_NAME }}.azurecr.io/utbgo-api:${{ github.sha }}
+          docker build -f ./Dockerfile -t utbgoregistryt4kj.azurecr.io/utbgo-api:${{ github.sha }} .
+          docker push utbgoregistryt4kj.azurecr.io/utbgo-api:${{ github.sha }}
           
           # Tracking Python
-          docker build -f tracking-service/Dockerfile -t ${{ secrets.ACR_NAME }}.azurecr.io/utbgo-tracking:${{ github.sha }} ./tracking-service
-          docker push ${{ secrets.ACR_NAME }}.azurecr.io/utbgo-tracking:${{ github.sha }}
+          docker build -f tracking-service/Dockerfile -t utbgoregistryt4kj.azurecr.io/utbgo-tracking:${{ github.sha }} ./tracking-service
+          docker push utbgoregistryt4kj.azurecr.io/utbgo-tracking:${{ github.sha }}
           
           # Recommendations Python
-          docker build -f recommendations-service/Dockerfile -t ${{ secrets.ACR_NAME }}.azurecr.io/utbgo-recommendations:${{ github.sha }} ./recommendations-service
-          docker push ${{ secrets.ACR_NAME }}.azurecr.io/utbgo-recommendations:${{ github.sha }}
+          docker build -f recommendations-service/Dockerfile -t utbgoregistryt4kj.azurecr.io/utbgo-recommendations:${{ github.sha }} ./recommendations-service
+          docker push utbgoregistryt4kj.azurecr.io/utbgo-recommendations:${{ github.sha }}
           
           # Video Worker Python
-          docker build -f video-worker-service/Dockerfile -t ${{ secrets.ACR_NAME }}.azurecr.io/utbgo-video-worker:${{ github.sha }} ./video-worker-service
-          docker push ${{ secrets.ACR_NAME }}.azurecr.io/utbgo-video-worker:${{ github.sha }}
+          docker build -f video-worker-service/Dockerfile -t utbgoregistryt4kj.azurecr.io/utbgo-video-worker:${{ github.sha }} ./video-worker-service
+          docker push utbgoregistryt4kj.azurecr.io/utbgo-video-worker:${{ github.sha }}
 
   # =========================================================
   # JOB 2: Deploy to Production (Terraform)
@@ -100,10 +100,10 @@ jobs:
       - name: 🚀 Terraform Apply
         run: |
           terraform apply -auto-approve \
-            -var="api_image=${{ secrets.ACR_NAME }}.azurecr.io/utbgo-api:${{ github.sha }}" \
-            -var="tracking_image=${{ secrets.ACR_NAME }}.azurecr.io/utbgo-tracking:${{ github.sha }}" \
-            -var="recommendations_image=${{ secrets.ACR_NAME }}.azurecr.io/utbgo-recommendations:${{ github.sha }}" \
-            -var="video_worker_image=${{ secrets.ACR_NAME }}.azurecr.io/utbgo-video-worker:${{ github.sha }}"
+            -var="api_image=utbgoregistryt4kj.azurecr.io/utbgo-api:${{ github.sha }}" \
+            -var="tracking_image=utbgoregistryt4kj.azurecr.io/utbgo-tracking:${{ github.sha }}" \
+            -var="recommendations_image=utbgoregistryt4kj.azurecr.io/utbgo-recommendations:${{ github.sha }}" \
+            -var="video_worker_image=utbgoregistryt4kj.azurecr.io/utbgo-video-worker:${{ github.sha }}"
         env:
           ARM_CLIENT_ID: ${{ secrets.AZURE_AD_CLIENT_ID }}
           ARM_CLIENT_SECRET: ${{ secrets.AZURE_AD_CLIENT_SECRET }}
