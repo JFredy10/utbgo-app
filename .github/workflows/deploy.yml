@@ -32,7 +32,10 @@ jobs:
       - name: 🔐 Azure Login
         uses: azure/login@v2
         with:
-          creds: '{"clientId":"${{ secrets.AZURE_AD_CLIENT_ID }}","clientSecret":"${{ secrets.AZURE_AD_CLIENT_SECRET }}","subscriptionId":"${{ secrets.AZURE_SUBSCRIPTION_ID }}","tenantId":"${{ secrets.AZURE_AD_TENANT_ID }}"}'
+          client-id: ${{ secrets.AZURE_AD_CLIENT_ID }}
+          client-secret: ${{ secrets.AZURE_AD_CLIENT_SECRET }}
+          tenant-id: ${{ secrets.AZURE_AD_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
       - name: 🐳 Login to Azure Container Registry
         run: az acr login --name ${{ secrets.ACR_NAME }}
@@ -75,7 +78,10 @@ jobs:
       - name: 🔐 Azure Login
         uses: azure/login@v2
         with:
-          creds: '{"clientId":"${{ secrets.AZURE_AD_CLIENT_ID }}","clientSecret":"${{ secrets.AZURE_AD_CLIENT_SECRET }}","subscriptionId":"${{ secrets.AZURE_SUBSCRIPTION_ID }}","tenantId":"${{ secrets.AZURE_AD_TENANT_ID }}"}'
+          client-id: ${{ secrets.AZURE_AD_CLIENT_ID }}
+          client-secret: ${{ secrets.AZURE_AD_CLIENT_SECRET }}
+          tenant-id: ${{ secrets.AZURE_AD_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
       - name: ⚙️ Setup Terraform
         uses: hashicorp/setup-terraform@v3
