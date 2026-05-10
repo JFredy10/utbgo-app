@@ -67,16 +67,16 @@ jobs:
           ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           ARM_TENANT_ID: ${{ secrets.AZURE_AD_TENANT_ID }}
           
-          TF_VAR_db_connection_string: ${{ secrets.TF_VAR_DB_CONNECTION_STRING }}
-          TF_VAR_redis_url: ${{ secrets.TF_VAR_REDIS_URL }}
-          TF_VAR_jwt_secret: ${{ secrets.TF_VAR_JWT_SECRET_KEY }}
-          TF_VAR_cloudinary_url: ${{ secrets.TF_VAR_CLOUDINARY_URL }}
-          TF_VAR_recommendations_api_key: ${{ secrets.TF_VAR_RECOMMENDATIONS_API_KEY }}
-          TF_VAR_tracking_api_key: ${{ secrets.TF_VAR_TRACKING_API_KEY }}
-          TF_VAR_google_client_id: ${{ secrets.TF_VAR_GOOGLE_CLIENT_ID }}
-          TF_VAR_firebase_project_id: ${{ secrets.TF_VAR_FIREBASE_PROJECT_ID }}
-          TF_VAR_azure_oidc_client_id: ${{ secrets.TF_VAR_AZURE_AD_CLIENT_ID }}
-          TF_VAR_azure_oidc_tenant_id: ${{ secrets.TF_VAR_AZURE_AD_TENANT_ID }}
+          TF_VAR_db_connection_string: ${{ secrets.TF_VAR_DB_CONNECTION_STRING || 'placeholder' }}
+          TF_VAR_redis_url: ${{ secrets.TF_VAR_REDIS_URL || 'placeholder' }}
+          TF_VAR_jwt_secret: ${{ secrets.TF_VAR_JWT_SECRET_KEY || 'placeholder' }}
+          TF_VAR_cloudinary_url: ${{ secrets.TF_VAR_CLOUDINARY_URL || 'placeholder' }}
+          TF_VAR_recommendations_api_key: ${{ secrets.TF_VAR_RECOMMENDATIONS_API_KEY || 'placeholder' }}
+          TF_VAR_tracking_api_key: ${{ secrets.TF_VAR_TRACKING_API_KEY || 'placeholder' }}
+          TF_VAR_google_client_id: ${{ secrets.TF_VAR_GOOGLE_CLIENT_ID || 'placeholder' }}
+          TF_VAR_firebase_project_id: ${{ secrets.TF_VAR_FIREBASE_PROJECT_ID || 'placeholder' }}
+          TF_VAR_azure_oidc_client_id: ${{ secrets.AZURE_AD_CLIENT_ID }}
+          TF_VAR_azure_oidc_tenant_id: ${{ secrets.AZURE_AD_TENANT_ID }}
 
   # =========================================================
   # JOB 2: Build & Push to ACR
@@ -171,13 +171,13 @@ jobs:
           ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           ARM_TENANT_ID: ${{ secrets.AZURE_AD_TENANT_ID }}
           
-          TF_VAR_db_connection_string: ${{ secrets.TF_VAR_DB_CONNECTION_STRING }}
-          TF_VAR_redis_url: ${{ secrets.TF_VAR_REDIS_URL }}
-          TF_VAR_jwt_secret: ${{ secrets.TF_VAR_JWT_SECRET_KEY }}
-          TF_VAR_cloudinary_url: ${{ secrets.TF_VAR_CLOUDINARY_URL }}
-          TF_VAR_recommendations_api_key: ${{ secrets.TF_VAR_RECOMMENDATIONS_API_KEY }}
-          TF_VAR_tracking_api_key: ${{ secrets.TF_VAR_TRACKING_API_KEY }}
-          TF_VAR_google_client_id: ${{ secrets.TF_VAR_GOOGLE_CLIENT_ID }}
-          TF_VAR_firebase_project_id: ${{ secrets.TF_VAR_FIREBASE_PROJECT_ID }}
-          TF_VAR_azure_oidc_client_id: ${{ secrets.TF_VAR_AZURE_AD_CLIENT_ID }}
-          TF_VAR_azure_oidc_tenant_id: ${{ secrets.TF_VAR_AZURE_AD_TENANT_ID }}
+          TF_VAR_db_connection_string: ${{ secrets.TF_VAR_DB_CONNECTION_STRING || 'placeholder' }}
+          TF_VAR_redis_url: ${{ secrets.TF_VAR_REDIS_URL || 'placeholder' }}
+          TF_VAR_jwt_secret: ${{ secrets.TF_VAR_JWT_SECRET_KEY || 'placeholder' }}
+          TF_VAR_cloudinary_url: ${{ secrets.TF_VAR_CLOUDINARY_URL || 'placeholder' }}
+          TF_VAR_recommendations_api_key: ${{ secrets.TF_VAR_RECOMMENDATIONS_API_KEY || 'placeholder' }}
+          TF_VAR_tracking_api_key: ${{ secrets.TF_VAR_TRACKING_API_KEY || 'placeholder' }}
+          TF_VAR_google_client_id: ${{ secrets.TF_VAR_GOOGLE_CLIENT_ID || 'placeholder' }}
+          TF_VAR_firebase_project_id: ${{ secrets.TF_VAR_FIREBASE_PROJECT_ID || 'placeholder' }}
+          TF_VAR_azure_oidc_client_id: ${{ secrets.AZURE_AD_CLIENT_ID }}
+          TF_VAR_azure_oidc_tenant_id: ${{ secrets.AZURE_AD_TENANT_ID }}
