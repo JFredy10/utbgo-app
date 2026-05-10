@@ -55,7 +55,12 @@ jobs:
           ARM_TENANT_ID: ${{ secrets.AZURE_AD_TENANT_ID }}
 
       - name: 🚀 Terraform Apply (Base)
-        run: terraform apply -auto-approve
+        run: |
+          terraform apply -auto-approve \
+            -var="api_image=utbgoregistryt4kj.azurecr.io/utbgo-api:latest" \
+            -var="tracking_image=utbgoregistryt4kj.azurecr.io/utbgo-tracking:latest" \
+            -var="recommendations_image=utbgoregistryt4kj.azurecr.io/utbgo-recommendations:latest" \
+            -var="video_worker_image=utbgoregistryt4kj.azurecr.io/utbgo-video-worker:latest"
         env:
           ARM_CLIENT_ID: ${{ secrets.AZURE_AD_CLIENT_ID }}
           ARM_CLIENT_SECRET: ${{ secrets.AZURE_AD_CLIENT_SECRET }}
