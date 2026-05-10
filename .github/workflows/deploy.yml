@@ -24,6 +24,8 @@ jobs:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     environment: Production
+    outputs:
+      acr_name: ${{ steps.set_acr_name.outputs.ACR_NAME }}
 
     defaults:
       run:
@@ -55,6 +57,7 @@ jobs:
           ARM_TENANT_ID: ${{ secrets.AZURE_AD_TENANT_ID }}
 
       - name: 🚀 Terraform Apply (Base)
+        id: apply_base
         run: |
           terraform apply -auto-approve \
             -var="api_image=mcr.microsoft.com/azuredocs/containerapps-helloworld:latest" \
@@ -78,6 +81,17 @@ jobs:
           TF_VAR_azure_oidc_client_id: ${{ secrets.AZURE_AD_CLIENT_ID }}
           TF_VAR_azure_oidc_tenant_id: ${{ secrets.AZURE_AD_TENANT_ID }}
 
+      - name: 🔍 Get ACR Name
+        id: set_acr_name
+        run: |
+          ACR_NAME=$(terraform output -raw acr_name)
+          echo "ACR_NAME=$ACR_NAME" >> $GITHUB_OUTPUT
+        env:
+          ARM_CLIENT_ID: ${{ secrets.AZURE_AD_CLIENT_ID }}
+          ARM_CLIENT_SECRET: ${{ secrets.AZURE_AD_CLIENT_SECRET }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          ARM_TENANT_ID: ${{ secrets.AZURE_AD_TENANT_ID }}
+
   # =========================================================
   # JOB 2: Build & Push to ACR
   # =========================================================
@@ -85,6 +99,8 @@ jobs:
     name: Build & Push to Azure Container Registry
     needs: provision_infra
     runs-on: ubuntu-latest
+    env:
+      ACR_NAME: ${{ needs.provision_infra.outputs.acr_name }}
     
     steps:
       - name: 📥 Checkout Repository
@@ -101,33 +117,35 @@ jobs:
           az account set --subscription "$AZ_SUBSCRIPTION"
 
       - name: 🐳 Login to Azure Container Registry
-        run: az acr login --name utbgoregistryt4kj
+        run: az acr login --name ${{ env.ACR_NAME }}
 
       - name: 🔨 Build and Push Images
         run: |
           # API Go
-          docker build -f ./Dockerfile -t utbgoregistryt4kj.azurecr.io/utbgo-api:${{ github.sha }} .
-          docker push utbgoregistryt4kj.azurecr.io/utbgo-api:${{ github.sha }}
+          docker build -f ./Dockerfile -t ${{ env.ACR_NAME }}.azurecr.io/utbgo-api:${{ github.sha }} .
+          docker push ${{ env.ACR_NAME }}.azurecr.io/utbgo-api:${{ github.sha }}
           
           # Tracking Python
-          docker build -f tracking-service/Dockerfile -t utbgoregistryt4kj.azurecr.io/utbgo-tracking:${{ github.sha }} ./tracking-service
-          docker push utbgoregistryt4kj.azurecr.io/utbgo-tracking:${{ github.sha }}
+          docker build -f tracking-service/Dockerfile -t ${{ env.ACR_NAME }}.azurecr.io/utbgo-tracking:${{ github.sha }} ./tracking-service
+          docker push ${{ env.ACR_NAME }}.azurecr.io/utbgo-tracking:${{ github.sha }}
           
           # Recommendations Python
-          docker build -f recommendations-service/Dockerfile -t utbgoregistryt4kj.azurecr.io/utbgo-recommendations:${{ github.sha }} ./recommendations-service
-          docker push utbgoregistryt4kj.azurecr.io/utbgo-recommendations:${{ github.sha }}
+          docker build -f recommendations-service/Dockerfile -t ${{ env.ACR_NAME }}.azurecr.io/utbgo-recommendations:${{ github.sha }} ./recommendations-service
+          docker push ${{ env.ACR_NAME }}.azurecr.io/utbgo-recommendations:${{ github.sha }}
           
           # Video Worker Python
-          docker build -f video-worker-service/Dockerfile -t utbgoregistryt4kj.azurecr.io/utbgo-video-worker:${{ github.sha }} ./video-worker-service
-          docker push utbgoregistryt4kj.azurecr.io/utbgo-video-worker:${{ github.sha }}
+          docker build -f video-worker-service/Dockerfile -t ${{ env.ACR_NAME }}.azurecr.io/utbgo-video-worker:${{ github.sha }} ./video-worker-service
+          docker push ${{ env.ACR_NAME }}.azurecr.io/utbgo-video-worker:${{ github.sha }}
 
   # =========================================================
   # JOB 3: Update Container Apps with new images
   # =========================================================
   deploy_apps:
     name: Update Apps via Terraform
-    needs: build_and_push
+    needs: [provision_infra, build_and_push]
     runs-on: ubuntu-latest
+    env:
+      ACR_NAME: ${{ needs.provision_infra.outputs.acr_name }}
 
     defaults:
       run:
@@ -161,10 +179,10 @@ jobs:
       - name: 🚀 Terraform Apply (Final)
         run: |
           terraform apply -auto-approve \
-            -var="api_image=utbgoregistryt4kj.azurecr.io/utbgo-api:${{ github.sha }}" \
-            -var="tracking_image=utbgoregistryt4kj.azurecr.io/utbgo-tracking:${{ github.sha }}" \
-            -var="recommendations_image=utbgoregistryt4kj.azurecr.io/utbgo-recommendations:${{ github.sha }}" \
-            -var="video_worker_image=utbgoregistryt4kj.azurecr.io/utbgo-video-worker:${{ github.sha }}"
+            -var="api_image=${{ env.ACR_NAME }}.azurecr.io/utbgo-api:${{ github.sha }}" \
+            -var="tracking_image=${{ env.ACR_NAME }}.azurecr.io/utbgo-tracking:${{ github.sha }}" \
+            -var="recommendations_image=${{ env.ACR_NAME }}.azurecr.io/utbgo-recommendations:${{ github.sha }}" \
+            -var="video_worker_image=${{ env.ACR_NAME }}.azurecr.io/utbgo-video-worker:${{ github.sha }}"
         env:
           ARM_CLIENT_ID: ${{ secrets.AZURE_AD_CLIENT_ID }}
           ARM_CLIENT_SECRET: ${{ secrets.AZURE_AD_CLIENT_SECRET }}
