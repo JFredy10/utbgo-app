@@ -396,9 +396,6 @@ func main() {
 		c.JSON(http.StatusOK, gin.H{"status": "healthy", "db": "connected"})
 	})
 
-	// --- App Links Validation Endpoint ---
-	router.StaticFile("/.well-known/assetlinks.json", "./.well-known/assetlinks.json")
-
 	// --- Configuración de CORS ---
 	// En producción, configura AllowOrigins con dominios específicos.
 	allowedOrigins := os.Getenv("ALLOWED_ORIGINS")
@@ -480,7 +477,6 @@ func main() {
 		// Videos
 		videos := v1.Group("/videos")
 		{
-		videos.GET("/:id", handleGetVideoByID)
 			videos.GET("/feed", OptionalAuthMiddleware(), handleGetFeedV2)
 			videos.GET("/search", handleSearchV2)
 			videos.POST("/upload", AuthMiddleware(), RequireProfessor(), handleUploadVideoV2)
